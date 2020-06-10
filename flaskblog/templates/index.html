@@ -1,0 +1,646 @@
+{% extends "layout.html" %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<style>
+    /* @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap'); */
+    /* #mainContents h1 {
+        font-family: 'Do Hyeon', sans-serif;
+        font-size: 2.5em;
+        font-weight: 900;
+        margin-bottom: 20px;
+    } */
+
+    #mainContents {
+        animation: FadeIn 1.2s forwards ease-out;
+    }
+
+    @keyframes FadeIn {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    #map1 {
+        margin: auto auto auto 0;
+        width: 49%;
+    }
+
+    #map2 {
+        margin: auto 0px auto auto;
+        width: 49%;
+    }
+
+    #maps {
+        margin-bottom: 10px;
+    }
+
+    @keyframes fadeIn2 {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    #openModalBtn {
+        position: relative;
+        background-color: #850000;
+        /* animation-delay: 0.3s; */
+    }
+
+    #openModalBtn:hover {
+        background-color: rgb(173, 3, 3);
+    }
+
+    @media (max-width: 870px) {
+
+        #map1,
+        #map2 {
+            margin: 10px auto;
+            width: 100%;
+        }
+
+        #mainContents h1 {
+            font-size: 1.3em;
+        }
+
+        html input[type="range"] {
+            width: 100% !important;
+        }
+    }
+
+    .card {
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+        padding: 0;
+    }
+
+    .card-image img {
+        width: 100%;
+    }
+
+    .card-content p {
+        margin: 10px auto;
+        font-size: 20px;
+        font-weight: 900;
+    }
+
+    html input[type="range"] {
+        outline: 0;
+        border: 0;
+        border-radius: 5px;
+        width: 88%;
+        max-width: 100%;
+        margin: 10px 0;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+        html input[type="range"] {
+            overflow: hidden;
+            height: 20px;
+            -webkit-appearance: none;
+            background-color: #ddd;
+        }
+    }
+
+    html input[type="range"]::-webkit-slider-runnable-track {
+        height: 30px;
+        -webkit-appearance: none;
+        color: #444;
+        margin-top: -1px;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    html input[type="range"]::-webkit-slider-thumb {
+        width: 1px;
+        -webkit-appearance: none;
+        height: 1px;
+        cursor: ew-resize;
+        background: #fff;
+        box-shadow: -1000px 0 0 1000px rgb(158, 0, 0), inset 0 0 0 40px rgb(158, 0, 0);
+        border-radius: 50%;
+        transition: box-shadow 0.2s ease-in-out;
+        position: relative;
+    }
+
+    html input[type="range"]:active::-webkit-slider-thumb {
+        background: #fff;
+        box-shadow: -1000px 0 0 1000px rgb(158, 0, 0), inset 0 0 0 3px rgb(158, 0, 0);
+    }
+
+    #check {
+        cursor: default;
+    }
+
+    input[type='checkbox'] {
+        /* display: none; */
+        background-color: black;
+        border-radius: 1px solid black;
+    }
+
+    #mainContents>div.text-center>h1 {
+        border-bottom: 1px solid rgb(173, 173, 173);
+        padding-bottom: 15px;
+    }
+
+    #checkItem div label,
+    #checkItem div input {
+        margin: 10px auto;
+    }
+
+    .funkyradio div {
+        clear: both;
+        overflow: hidden;
+    }
+
+    .funkyradio label {
+        width: 100%;
+        border-radius: 3px;
+        border: 1px solid #D1D3D4;
+        font-weight: 900;
+    }
+
+    .funkyradio input[type="radio"]:empty,
+    .funkyradio input[type="checkbox"]:empty {
+        display: none;
+    }
+
+    .funkyradio input[type="radio"]:empty~label,
+    .funkyradio input[type="checkbox"]:empty~label {
+        position: relative;
+        line-height: 2.5em;
+        text-indent: 3.25em;
+        margin-top: 2em;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .funkyradio input[type="radio"]:empty~label:before,
+    .funkyradio input[type="checkbox"]:empty~label:before {
+        position: absolute;
+        display: block;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        content: '';
+        width: 2.5em;
+        background: #D1D3D4;
+        border-radius: 3px 0 0 3px;
+    }
+
+    .funkyradio input[type="radio"]:hover:not(:checked)~label,
+    .funkyradio input[type="checkbox"]:hover:not(:checked)~label {
+        color: #888;
+    }
+
+    .funkyradio input[type="radio"]:hover:not(:checked)~label:before,
+    .funkyradio input[type="checkbox"]:hover:not(:checked)~label:before {
+        content: '\2714';
+        text-indent: .9em;
+        color: #C2C2C2;
+        transition: ease-out 0.3s;
+        transition-property: background-color;
+    }
+
+
+
+    .funkyradio input[type="radio"]:checked~label,
+    .funkyradio input[type="checkbox"]:checked~label {
+        color: #777;
+    }
+
+    .funkyradio input[type="radio"]:checked~label:before,
+    .funkyradio input[type="checkbox"]:checked~label:before {
+        content: '\2714';
+        text-indent: .9em;
+        color: #333;
+        background-color: #ccc;
+        transition: ease-out 0.5s;
+        transition-property: background-color;
+    }
+
+    /* .res li{
+        list-style: none;
+        float: left;
+        padding: 0 5px;
+        font-size: 12px;
+    } */
+    .res {
+        text-align: center;
+        margin: 10px auto;
+    }
+
+    .res span {
+        position: relative;
+        margin: 10px 10px;
+        font-weight: 900;
+        color: #850000;
+        /* border:1px solid #DDDDDD; */
+        padding: 4px;
+        border-radius: 7px;
+        background-color: rgb(241, 241, 241);
+        box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+        animation: resFadeIn ease-out 1s forwards;
+    }
+
+    @keyframes resFadeIn {
+        0% {
+            color: white;
+            background-color: #850000;
+        }
+
+        100% {
+            color: #850000;
+            background-color: rgb(241, 241, 241);
+        }
+    }
+
+    @media (max-width:1461px) {
+        html input[type="range"] {
+            width: 100% !important;
+        }
+    }
+
+    @media (max-width: 870px) {
+
+        .funkyradio input[type="radio"]:hover:not(:checked)~label:before,
+        .funkyradio input[type="checkbox"]:hover:not(:checked)~label:before {
+            content: '';
+        }
+
+        .funkyradio input[type="radio"]:checked~label:before,
+        .funkyradio input[type="checkbox"]:checked~label:before {
+            content: '';
+        }
+
+        .res span {
+            display: block;
+        }
+
+        .down {
+            display: none;
+        }
+    }
+
+    .funkyradio input[type="radio"]:focus~label:before,
+    .funkyradio input[type="checkbox"]:focus~label:before {
+        box-shadow: 0 0 0 3px #999;
+    }
+
+    .funkyradio-danger input[type="radio"]:checked~label:before,
+    .funkyradio-danger input[type="checkbox"]:checked~label:before {
+        color: #fff;
+        background-color: rgb(133, 0, 0);
+    }
+
+    .charts {
+        margin: 80px auto;
+    }
+
+    #chartGood .card div {
+        display: none;
+    }
+
+    .down {
+        position: relative;
+        opacity: 0;
+    }
+
+    .down .down1 {
+        position: relative;
+        animation: down 2s infinite ease-in-out;
+    }
+
+    @keyframes down {
+        0% {
+            top: 0px;
+        }
+
+        50% {
+            top: 10px;
+        }
+
+        100% {
+            top: 0px;
+        }
+    }
+</style>
+<div id="mainContents">
+    <div class="row" id="maps">
+        <div class="card" id="map1">
+            <div class="card-image">
+                <img class="img-responsive" src="../static/img/world_map_real/world_map_0.jpg" alt="" id="worldMapLeft">
+            </div>
+            <div class="card-content text-center">
+                <p>실제 확진자 분포</p>
+            </div>
+        </div>
+        <div class="card" id="map2">
+            <div class="card-image">
+                <img class="img-responsive" src="../static/img/world_map4.png" alt="" id="worldMapRight">
+            </div>
+            <div class="card-content text-center">
+                <p>선택한 정보를 바탕으로 한 예상 추이</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <input type="range" value="0" max="290">
+        <h2 style="font-size: 20px; font-weight: 900; margin:auto auto;">2020년 3월 1일</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 res">
+            <span>사회적 거리두기를 잘 했다</span>
+        </div>
+    </div>
+
+    <div class="row funkyradio" id="checkItem">
+        <div class="funkyradio-danger col-lg-3">
+            <input type="radio" name="checkbox" id="checkbox1" />
+            <label for="checkbox1">전혀 안했다</label>
+        </div>
+        <div class="funkyradio-danger col-lg-3">
+            <input type="radio" name="checkbox" id="checkbox2" />
+            <label for="checkbox2">조금 했다</label>
+        </div>
+        <div class="funkyradio-danger col-lg-3">
+            <input type="radio" name="checkbox" id="checkbox3" />
+            <label for="checkbox3">보통이다</label>
+        </div>
+        <div class="funkyradio-danger col-lg-3">
+            <input type="radio" name="checkbox" id="checkbox4" />
+            <label for="checkbox4">양호하다</label>
+        </div>
+    </div>
+
+    <div class="row" id="inputInfoBtn">
+        <button type="button" class="btn btn-block btn-lg btn-danger" id="openModalBtn"
+            style="font-weight: 800; letter-spacing: 2px;">
+            START
+        </button>
+    </div>
+</div>
+
+<div class="text-center down">
+    <small class="down1">그래프 보기</small>
+</div>
+<div class="text-center down">
+    <img src="../static/img/down.png" alt="" class="down1">
+</div>
+
+<div class="col-lg-12 charts" id="chart">
+    <!-- <div class="card">
+        <div class="card-body"> <canvas id="lineChart" height="150"></canvas></div>
+    </div>
+    <div class="card">
+        <div class="card-body"> <canvas id="lineChartBad" height="150"></canvas></div>
+    </div> -->
+</div>
+
+<script>
+    var rangePercent = $('[type="range"]').val();
+
+    $('[type="range"]').on('change input', dateChanger);
+    $('[type="range"]').change('change input', dateChanger);
+
+    $('#openModalBtn').on('click', () => {
+        let timer = 0;
+        console.log('버튼누름');
+        $(window).scrollTop(0);
+        $('#map1, #map2').css({
+            'opacity': '0'
+        });
+        $('#map1, #map2').animate({
+            'opacity': '1'
+        }, 800);
+        setTimeout(() => {
+            PlayInt = setInterval(() => {
+                $('[type="range"]').val(timer);
+                var newdate = new Date(2020, 3, 1);
+                newdate.setDate(newdate.getDate() + (Number(timer) / 10));
+                let print =
+                    `${newdate.getFullYear()}년 ${newdate.getMonth()}월 ${newdate.getDate()}일`
+                $('h2').text(print);
+                $('[type="range"]').css('filter', 'hue-rotate(' + parseInt(90 - (timer * 3) /
+                    10) + 'deg)');
+                $("#worldMapLeft").attr("src", "../static/img/world_map_real/world_map_" +
+                    parseInt(timer / 10) + ".jpg");
+                console.log(timer);
+                if ($('#checkbox4').is(':checked') == true) {
+                    $("#worldMapRight").attr("src",
+                        "../static/img/world_map_good/world_map_" +
+                        parseInt(timer / 10) + ".jpg");
+                } else if ($('#checkbox1').is(':checked') == true) {
+                    $("#worldMapRight").attr("src", "../static/img/world_map_verybad/world_map_" +
+                        parseInt(timer / 10) + ".jpg");
+                }
+                if (timer > 289) {
+                    clearInterval(PlayInt);
+                    console.log(timer + '종료');
+                }
+                timer++;
+            }, 30);
+        }, 1000);
+        clearTimeout();
+    });
+
+    $('.funkyradio input[type="radio"]').on('click', () => {
+        console.log('바뀜');
+        $('.res').empty(); //선택한 부모의 자식 요소를 모두 제거
+        if ($('#checkbox2').is(':checked') == true) {
+            $('.res').append('<span>비상사태</span>');
+            $('.res').append('<span>공함검사 강화</span>');
+            $('.res').append('<span>중국관련통제</span>');
+        } else if ($('#checkbox3').is(':checked') == true) {
+            $('.res').append('<span>비상사태</span>');
+            $('.res').append('<span>공항검사 강화</span>');
+            $('.res').append('<span>중국관련통제</span>');
+            $('.res').append('<span>휴교령</span>');
+            $('.res').append('<span>국경폐쇄</span>');
+            $('.res').append('<span>공공모임장소폐쇄</span>');
+        } else if ($('#checkbox4').is(':checked') == true) {
+            $('.res').append('<span>비상사태</span>');
+            $('.res').append('<span>공항검사 강화</span>');
+            $('.res').append('<span>중국관련통제</span>');
+            $('.res').append('<span>휴교령</span>');
+            $('.res').append('<span>공공모임장소폐쇄</span>');
+            $('.res').append('<span>해외여행자관리강화</span>');
+            $('.res').append('<span>국가의 의료복지</span>');
+            $('.res').append('<span>지역봉쇄</span>');
+            $('.res').append('<span>국경폐쇄</span>');
+            $('.res').append('<span>문화시설폐쇄</span>');
+        } else if ($('#checkbox1').is(':checked') == true) {
+            $('.res').append('<span>사회적 거리두기를 전혀 안했다</span>');
+        }
+    });
+
+    function dateChanger() {
+        rangePercent = parseInt($('[type="range"]').val() / 10);
+        var newdate = new Date(2020, 3, 1);
+        newdate.setDate(newdate.getDate() + Number(rangePercent));
+        // var nd = new Date(newdate);
+        let print = `${newdate.getFullYear()}년 ${newdate.getMonth()}월 ${newdate.getDate()}일`
+        $('h2').text(print);
+        $('[type="range"]').css('filter', 'hue-rotate(' + (90 - (rangePercent * 3)) + 'deg)');
+        $("#worldMapLeft").attr("src", "../static/img/world_map_real/world_map_" + rangePercent + ".jpg");
+
+        if ($('#checkbox4').is(':checked') == true) {
+            $("#worldMapRight").attr("src", "../static/img/world_map_good/world_map_" + rangePercent + ".jpg");
+        } else if ($('#checkbox1').is(':checked') == true) {
+            $("#worldMapRight").attr("src", "../static/img/world_map_verybad/world_map_" + rangePercent + ".jpg");
+        }
+    }
+
+    $('#openModalBtn').on('click', () => {
+        let windowWidth = $(window).width();
+
+        // if (Number(windowWidth) > 900) {
+            $('#chart').empty();
+            $('.down').animate({
+                'opacity': '0'
+            }, 500);
+            setTimeout(() => {
+                if ($('#checkbox4').is(':checked') == true) {
+                    $('#chart').append(
+                        '<div class="card"><div class="card-body"><canvas id="lineChart" width="100%" height="100"></canvas></div></div>'
+                    );
+                    goodChart();
+                } else if ($('#checkbox1').is(':checked') == true) {
+                    $('#chart').append(
+                        '<div class="card"><div class="card-body"><canvas id="lineChartBad" width="100%" height="100"></canvas></div></div>'
+                    );
+                    badChart();
+                }
+                $('.down').animate({
+                    'opacity': '1'
+                }, 1000);
+            }, 10000);
+        // }
+    });
+
+    function goodChart() {
+        var goodL = document.getElementById("lineChart").getContext('2d');
+        var myLineChart = new Chart(goodL, {
+            type: 'line',
+            data: {
+                labels: ["2020-03-01", "2020-03-02", "2020-03-03", "2020-03-04", "2020-03-05",
+                    "2020-03-06",
+                    "2020-03-07", "2020-03-08", "2020-03-09", "2020-03-10",
+                    "2020-03-10", "2020-03-11", "2020-03-12", "2020-03-13", "2020-03-14",
+                    "2020-03-15",
+                    "2020-03-16", "2020-03-17", "2020-03-18", "2020-03-19", "2020-03-20",
+                    "2020-03-21", "2020-03-22", "2020-03-23", "2020-03-24", "2020-03-25",
+                    "2020-03-26",
+                    "2020-03-27", "2020-03-28", "2020-03-29", "2020-03-30"
+                ],
+                datasets: [{
+                        label: "실제 누적 확진자",
+                        data: [87631, 89722, 91916, 94030, 96604, 100397, 103857, 107626,
+                            111641, 116462,
+                            121732, 129782, 139493, 150073, 162652, 174936, 189222, 206907,
+                            228710, 255974,
+                            287289, 318634, 353803, 396295, 440560, 492434, 558553, 621374,
+                            648203, 742060,
+                            785687
+                        ],
+                        backgroundColor: [
+                            'rgba(105, 0, 132, .2)',
+                        ],
+                        borderColor: [
+                            'rgba(200, 99, 132, .7)',
+                        ],
+                        borderWidth: 2
+                    },
+                    {
+                        label: "사회적 거리두기[양호하다]",
+                        data: [87631, 88898, 90053, 91618, 94299, 96606, 99145, 101853,
+                            104214, 106845,
+                            111774, 117902, 124486, 132431, 138460, 145613, 154854, 166526,
+                            178884, 192718,
+                            205073, 218479, 234877, 250553, 268780, 271427, 275673, 278727,
+                            280996, 284631,
+                            287569
+                        ],
+                        backgroundColor: [
+                            'rgba(0, 137, 132, .2)',
+                        ],
+                        borderColor: [
+                            'rgba(0, 10, 130, .7)',
+                        ],
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+    }
+
+    function badChart() {
+        var badL = document.getElementById("lineChartBad").getContext('2d');
+        var myLineChart = new Chart(badL, {
+            type: 'line',
+            data: {
+                labels: ["2020-03-01", "2020-03-02", "2020-03-03", "2020-03-04", "2020-03-05", "2020-03-06",
+                    "2020-03-07", "2020-03-08", "2020-03-09", "2020-03-10",
+                    "2020-03-10", "2020-03-11", "2020-03-12", "2020-03-13", "2020-03-14", "2020-03-15",
+                    "2020-03-16", "2020-03-17", "2020-03-18", "2020-03-19", "2020-03-20",
+                    "2020-03-21", "2020-03-22", "2020-03-23", "2020-03-24", "2020-03-25", "2020-03-26",
+                    "2020-03-27", "2020-03-28", "2020-03-29", "2020-03-30"
+                ],
+                datasets: [{
+                        label: "실제 누적 확진자",
+                        data: [87631, 89722, 91916, 94030, 96604, 100397, 103857, 107626, 111641, 116462,
+                            121732, 129782, 139493, 150073, 162652, 174936, 189222, 206907, 228710,
+                            255974,
+                            287289, 318634, 353803, 396295, 440560, 492434, 558553, 621374, 648203,
+                            742060,
+                            785687
+                        ],
+                        backgroundColor: [
+                            'rgba(105, 0, 132, .2)',
+                        ],
+                        borderColor: [
+                            'rgba(200, 99, 132, .7)',
+                        ],
+                        borderWidth: 2
+                    },
+                    {
+                        label: "사회적 거리두기[전혀 안했다]",
+                        data: [87631, 93805, 107193, 124946, 167212, 223691, 276109, 322003, 382535, 494882,
+                            614901, 764388, 899908, 1095658, 1245880, 1434558, 2062332, 2469262,
+                            3497815,
+                            4463923,
+                            5625989, 6759242, 8217209, 8957086, 10309389, 11822096, 13270154, 14328681,
+                            15268005, 15959564,
+                            16710279
+                        ],
+                        backgroundColor: [
+                            'rgba(0, 137, 132, .2)',
+                        ],
+                        borderColor: [
+                            'rgba(0, 10, 130, .7)',
+                        ],
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+    }
+</script>
+{% endblock content %}

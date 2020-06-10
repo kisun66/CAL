@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    body {
+        overflow-y: hidden;
+        overflow-x: hidden;
+        background-color: black;
+    }
+
+    .container-fluid {
+        width: 100%;
+    }
+
+    .logo {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: -50px;
+        margin-top: 0px;
+        animation: FadeIn 2s forwards ease-out;
+    }
+
+    #box {
+        position: absolute;
+        background-color: white;
+        width: 0;
+        height: 1000px;
+        left: 50%;
+        top: -50px;
+    }
+
+    #box2 {
+        position: absolute;
+        background-color: white;
+        width: 0;
+        height: 1000px;
+        left: 50%;
+        top: -50px;
+    }
+
+    @keyframes FadeIn {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+</style>
+<a href="#" id="main"><img src="../static/img/coronaMain_5.png" class="logo"></a>
+<div id="box"></div>
+<div id="box2"></div>
+<script>
+    $('#main').on('click', () => {
+        $('#box').animate({
+            // 'left':'100%'
+            'width': '50%'
+        }, 1000, 'easeInOutQuad');
+        $('#box2').animate({
+            'left': '0',
+            'width': '50%'
+        }, 1000, 'easeInOutQuad');
+        setTimeout(() => {
+            $(location).attr('href', 'home');
+        }, 1000);
+    });
+
+    $(window).on('load', function () {
+        let windowWidth = $(window).width();
+        if (Number(windowWidth) < 1000) {
+            $(location).attr('href', 'home');
+        }
+    });
+
+</script>
+{% endblock content %}

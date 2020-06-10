@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <script src="{{ url_for('static', filename='jquery-3.4.1.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='jquery-ui.min.js')}}"></script>
+    {% if title %}
+    <title>COVID-19 Analysis Laboratory - {{ title }}</title>
+    {% else %}
+    <title>COVID-19 Analysis Laboratory</title>
+    {% endif %}
+    <style>
+        body {
+            font-family: 'Nanum Gothic';
+            font-size: 17px;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        #logo {
+            font-family: 'Martel', serif;
+            font-size: 1.1em;
+        }
+
+        .navbar {
+            background-color: rgb(133, 0, 0);
+        }
+
+        #navbarToggle a {
+            color: white;
+            /* transition-property: color;
+            transition-duration: 0.2s;
+            transition-timing-function: linear; */
+        }
+
+        #navbarToggle a:hover {
+            color: rgb(163, 91, 91);
+        }
+
+        .col-md-8 {
+            margin: 0 auto;
+        }
+
+        .article-metadata a {
+            color: rgb(133, 0, 0);
+        }
+
+        .article-metadata a:hover {
+            color: black;
+        }
+
+        article .media-body h2 .article-title:hover {
+            color: rgb(133, 0, 0);
+        }
+
+        article.media.content-section {
+            border-radius: 10px;
+        }
+
+        /* #about1 > div > h1{
+            margin:20px auto 30px auto;
+        }
+        #about1 div{
+            position: relative;
+            margin:auto;
+            top:0px;
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn{
+            from { opacity:0; top:15px }
+            to { opacity:1; top:0px }
+        } */
+
+        #virus {
+            animation: rotate linear infinite 300s;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #openModalBtn {
+            margin: 10px auto;
+        }
+
+        .container-fluid {
+            width: 80%;
+        }
+
+        #navContainer {
+            width: 85%;
+        }
+
+        @media (max-width: 870px) {
+            body{
+                overflow-x:hidden;
+            }
+            .container-fluid {
+                width: 100%;
+            }
+            #navContainer{
+                width:100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container-fluid" id="navContainer">
+                <a class="navbar-brand mr-5" href="/home" id="logo">
+                    <img src="../static/img/CAL_logo.png" alt="" id="logoImg">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link mr-3" href="/home">Home</a>
+                        <a class="nav-item nav-link mr-3" href="{{ url_for('about') }}">About</a>
+                        <a class="nav-item nav-link mr-3" href="{{ url_for('home') }}">Discussion</a>
+                    </div>
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav">
+                        {% if current_user.is_authenticated %}
+                        <a class="nav-item nav-link mr-3" href="{{ url_for('new_post') }}">New Post</a>
+                        <a class="nav-item nav-link mr-3" href="{{ url_for('account') }}">Account</a>
+                        <a class="nav-item nav-link mr-3" href="{{ url_for('logout') }}">Logout</a>
+                        {% else %}
+                        <a class="nav-item nav-link mr-3" href="{{ url_for('login') }}">Login</a>
+                        <a class="nav-item nav-link mr-3" href="{{ url_for('register') }}">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </div>
+
+            <!-- <div class="col-md-4">
+                <div class="content-section">
+                    <h3>Our Sidebar</h3>
+                    <p class='text-muted'>You can put any information here you'd like.
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-light">Latest Posts</li>
+                            <li class="list-group-item list-group-item-light">Announcements</li>
+                            <li class="list-group-item list-group-item-light">Calendars</li>
+                            <li class="list-group-item list-group-item-light">etc</li>
+                        </ul>
+                    </p>
+                </div>
+            </div> -->
+        </div>
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script> -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    body>main>div>div>article {
+        position: relative;
+        width: 70%;
+        margin: auto;
+    }
+
+    #posts {
+        border: 0;
+        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+    }
+
+    #postBtn {
+        display: block;
+        width: 70%;
+        height: 50px;
+        margin: auto;
+        margin-bottom: 20px;
+        background-color: white;
+        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+    }
+
+    #postBtn div {
+        position: relative;
+        top: 20%;
+        font-weight: 900;
+    }
+
+    #postBtn:hover {
+        background-color: #850000;
+        color: white;
+    }
+
+    @media(max-width:870px) {
+
+        #postBtn,
+        #posts {
+            width: 100%;
+        }
+
+        h2 a {
+            font-size: 20px;
+            font-weight: 900;
+        }
+    }
+</style>
+
+{% if current_user.is_authenticated %}
+<a href="{{ url_for('new_post') }}" class="btn" id="postBtn">
+    <div>게시물 작성하기</div>
+</a>
+{% else %}
+<div></div>
+{% endif %}
+
+{% for post in posts|reverse %}
+<article class="media content-section" id="posts">
+    <img class="rounded-circle article-img"
+        src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ post.author.username }}</a>
+            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+        </div>
+        <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+    </div>
+</article>
+{% endfor %}
+<script>
+    $('article.media.content-section:nth-child(3)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(4)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(5)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(6)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(7)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(8)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(9)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(10)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(11)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+    $('article.media.content-section:nth-child(12)').css({
+        'opacity': '0',
+        'right': '40px'
+    });
+
+    $('article.media.content-section:nth-child(3)').animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(4)').delay(200).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(5)').delay(400).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(6)').delay(600).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(7)').delay(800).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(8)').delay(1000).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(9)').delay(1200).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(10)').delay(1400).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(11)').delay(1600).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    $('article.media.content-section:nth-child(12)').delay(1800).animate({
+        'opacity': '1',
+        'right': '0px'
+    }, 1000, 'easeOutQuad');
+    // $(document).ready(function () {
+    //     /* 1 */
+    //     $(window).scroll(function () {
+    //         /* 2 */
+    //         $('.hideme').each(function (i) {
+    //             var bottom_of_object = $(this).offset().top + $(this).outerHeight();
+    //             var bottom_of_window = $(window).scrollTop() + $(window).height();
+    //             /* 3 */
+    //             if (bottom_of_window > bottom_of_object / 2) {
+    //                 $(this).animate({
+    //                     'opacity': '1'
+    //                 }, 500);
+    //             }
+    //         });
+    //     });
+    // });
+</script>
+{% endblock content %}
